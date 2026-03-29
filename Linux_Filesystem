@@ -1,0 +1,139 @@
+# Master the Linux Filesystem
+
+## Linux filesystem basics
+- The Linux filesystem is a single tree structure starting at `/` (root).
+- Everything is mounted under `/`.
+- Directories are used to organize files and system resources.
+- Linux uses pathnames separated by `/`.
+
+## Key filesystem directories
+- `/` - root of the filesystem.
+- `/bin` - essential user commands (e.g. `ls`, `cat`, `cp`).
+- `/sbin` - system binaries for admin tasks (e.g. `fdisk`, `ifconfig`).
+- `/usr` - user utilities and applications.
+  - `/usr/bin` - normal user executables.
+  - `/usr/sbin` - system administration binaries.
+  - `/usr/lib` - libraries.
+- `/lib` and `/lib64` - shared libraries needed for boot and commands.
+- `/etc` - system configuration files.
+- `/var` - variable data files, logs, mail, spool.
+- `/home` - user home directories.
+- `/root` - root user home directory.
+- `/tmp` - temporary files.
+- `/dev` - device files representing hardware.
+- `/proc` - virtual filesystem for kernel and process info.
+- `/sys` - virtual filesystem for kernel devices and sysfs.
+- `/mnt` and `/media` - mount points for temporary and removable media.
+
+## Filesystem types
+- `ext4` - common Linux filesystem for disks.
+- `xfs` - high-performance filesystem for large files.
+- `btrfs` - modern filesystem with snapshots and compression.
+- `vfat` / `ntfs` - Windows-compatible filesystems.
+- `tmpfs` - in-memory temporary filesystem.
+- `proc`, `sysfs` - pseudo-filesystems for kernel data.
+
+## Navigation commands
+- `pwd` - show current directory.
+- `ls -la` - list files and hidden entries.
+- `cd /path/to/dir` - change directory.
+- `find / -name "*.conf"` - search files.
+- `tree /path` - view tree structure (install `tree`).
+
+## File and directory management
+- `mkdir dir` - create a directory.
+- `rmdir dir` - remove an empty directory.
+- `rm file` - remove a file.
+- `rm -r dir` - remove directory recursively.
+- `cp source dest` - copy files.
+- `cp -r srcdir destdir` - copy directories recursively.
+- `mv old new` - move or rename.
+- `touch file` - create an empty file or update timestamp.
+
+## Permissions and ownership
+- `ls -l` - show permissions, owner, group.
+- `chmod 644 file` - set permissions.
+- `chmod u+rwx,g+rx,o+r file` - symbolic permissions.
+- `chown user:group file` - change owner and group.
+- `chown -R user:group dir` - change recursively.
+- Permission bits:
+  - `r` = read, `w` = write, `x` = execute.
+  - Owner, group, others.
+- Special modes: `chmod 4755` (setuid), `chmod 2755` (setgid), `chmod 1777` (sticky bit).
+
+## Mounting and filesystems
+- `mount` - list mounted filesystems.
+- `df -h` - show disk usage by filesystem.
+- `du -sh /path` - show directory size.
+- `lsblk` - list block devices.
+- `blkid` - show filesystem UUIDs.
+- `mount /dev/sdb1 /mnt` - mount a device.
+- `umount /mnt` - unmount.
+- `/etc/fstab` - configure persistent mounts.
+  - example: `UUID=xxxx-xxxx /data ext4 defaults 0 2`
+
+## Understanding `/proc` and `/sys`
+- `/proc` is a virtual filesystem with process and kernel data.
+  - `cat /proc/cpuinfo`
+  - `cat /proc/meminfo`
+  - `ls /proc/<pid>` shows open files and status.
+- `/sys` exposes kernel device and driver interfaces.
+  - `ls /sys/class/net` for network devices.
+  - `cat /sys/block/sda/queue/scheduler`.
+
+## Filesystem permissions and access control
+- `umask` defines default file creation permissions.
+  - `umask 022` results in files 644 and dirs 755.
+- `getfacl` / `setfacl` manage ACLs for advanced permissions.
+- `chmod +x file` makes a file executable.
+- `stat file` shows detailed file metadata.
+
+## File links
+- Hard link: `ln file hardlink`
+- Symbolic link: `ln -s target symlink`
+- Use `ls -l` to identify links.
+- `readlink -f symlink` resolves the target path.
+
+## Common filesystem tasks for DevOps
+- Clean disk space:
+  - `du -sh /var/log/*`
+  - `journalctl --vacuum-size=200M`
+- Find large files:
+  - `find / -type f -size +100M`
+- Inspect open files:
+  - `lsof /path`
+- Diagnose space leaks:
+  - `df -h`
+  - `du -sh /var/*`
+- Secure mounts and permissions:
+  - use `noexec`, `nodev`, `nosuid` in `/etc/fstab`.
+
+## Practical exercises
+1. Explore the root tree:
+   - `cd /`
+   - `find . -maxdepth 2 -type d`
+2. Investigate `/etc`:
+   - `ls /etc | head`
+   - `grep -R "PermitRootLogin" /etc/ssh/sshd_config`
+3. Use `find` to locate large logs:
+   - `find /var/log -type f -size +10M`
+4. Mount a USB drive:
+   - `sudo mount /dev/sdb1 /mnt`
+   - `df -h /mnt`
+5. Create a symlink for a config file:
+   - `ln -s /etc/nginx/sites-available/default ~/default-nginx`
+
+## Mastery checklist
+- [ ] Know the standard Linux directory layout.
+- [ ] Use `find`, `locate`, `tree`, `du`, `df`.
+- [ ] Manage permissions with `chmod`, `chown`, `chgrp`.
+- [ ] Edit `/etc/fstab` and mount devices.
+- [ ] Understand `/proc` and `/sys`.
+- [ ] Use links and understand their differences.
+- [ ] Diagnose disk and filesystem issues.
+- [ ] Apply secure mount options.
+
+## Notes
+- The Linux filesystem is the foundation for system administration and DevOps automation.
+- Practice is essential: use a VM or WSL to try commands and inspect paths.
+- Keep this file as a reference for day-to-day Linux operations.
